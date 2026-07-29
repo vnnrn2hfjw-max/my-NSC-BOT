@@ -7,70 +7,72 @@ const {
 
 module.exports = {
 
-    data: new SlashCommandBuilder()
-        .setName("ticket")
-        .setDescription("Open the ticket panel"),
+data: new SlashCommandBuilder()
+.setName("ticket")
+.setDescription("Send the ticket panel"),
 
-    async execute(interaction) {
+async execute(interaction) {
 
-        const embed = new EmbedBuilder()
-            .setColor("#8B0000")
-            .setTitle("🔴⚫ NSC Ticket Center")
-            .setDescription(
-`⚫ Welcome to the **NSC Ticket System** 🔴
+const embed = new EmbedBuilder()
+.setColor("#8B0000")
+.setTitle("🔴⚫ NSC Ticket Center")
+.setDescription(
+`Welcome to the **NSC Ticket System**
 
-Choose the ticket type you need:
+Choose the ticket type you need below.
 
 🛒 **Buyer Ticket**
-> Purchase items or services.
+Purchase items or services.
 
 💬 **Support Ticket**
-> Need help? Our team will assist you.
+Need help from staff?
 
 🎁 **Free Access Ticket**
-> Request free access.
+Request free access.
 
-━━━━━━━━━━━━━━━━━━
-🔴 Do not open unnecessary tickets.
-⚫ Abuse may result in punishment.`
-            )
-            .setFooter({
-                text: "NSC • No Second Chances"
-            });
-
-
-        const menu = new StringSelectMenuBuilder()
-            .setCustomId("ticket_menu")
-            .setPlaceholder("🔴 Select a ticket type...")
-            .addOptions([
-                {
-                    label: "Buyer Ticket",
-                    description: "Purchase something",
-                    value: "buyer",
-                    emoji: "🛒"
-                },
-                {
-                    label: "Support Ticket",
-                    description: "Get help",
-                    value: "support",
-                    emoji: "💬"
-                },
-                {
-                    label: "Free Access Ticket",
-                    description: "Request access",
-                    value: "free",
-                    emoji: "🎁"
-                }
-            ]);
+━━━━━━━━━━━━━━
+⚫ Do not abuse the ticket system.
+🔴 Staff will assist you shortly.`
+)
+.setFooter({
+text:"NSC • No Second Chances"
+});
 
 
-        const row = new ActionRowBuilder()
-            .addComponents(menu);
+const menu = new StringSelectMenuBuilder()
+.setCustomId("ticket_menu")
+.setPlaceholder("🔴 Select ticket type")
+.addOptions([
+{
+label:"Buyer Ticket",
+description:"Purchase something",
+value:"buyer",
+emoji:"🛒"
+},
+{
+label:"Support Ticket",
+description:"Get help",
+value:"support",
+emoji:"💬"
+},
+{
+label:"Free Access Ticket",
+description:"Request access",
+value:"free",
+emoji:"🎁"
+}
+]);
 
 
-        await interaction.reply({
-            embeds: [embed],
-            components: [row]
-        });
-    }
+const row = new ActionRowBuilder()
+.addComponents(menu);
+
+
+await interaction.reply({
+embeds:[embed],
+components:[row]
+});
+
+}
+
 };
