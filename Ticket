@@ -1,0 +1,76 @@
+const {
+    SlashCommandBuilder,
+    EmbedBuilder,
+    ActionRowBuilder,
+    StringSelectMenuBuilder
+} = require("discord.js");
+
+module.exports = {
+
+    data: new SlashCommandBuilder()
+        .setName("ticket")
+        .setDescription("Open the ticket panel"),
+
+    async execute(interaction) {
+
+        const embed = new EmbedBuilder()
+            .setColor("#8B0000")
+            .setTitle("🔴⚫ NSC Ticket Center")
+            .setDescription(
+`⚫ Welcome to the **NSC Ticket System** 🔴
+
+Choose the ticket type you need:
+
+🛒 **Buyer Ticket**
+> Purchase items or services.
+
+💬 **Support Ticket**
+> Need help? Our team will assist you.
+
+🎁 **Free Access Ticket**
+> Request free access.
+
+━━━━━━━━━━━━━━━━━━
+🔴 Do not open unnecessary tickets.
+⚫ Abuse may result in punishment.`
+            )
+            .setFooter({
+                text: "NSC • No Second Chances"
+            });
+
+
+        const menu = new StringSelectMenuBuilder()
+            .setCustomId("ticket_menu")
+            .setPlaceholder("🔴 Select a ticket type...")
+            .addOptions([
+                {
+                    label: "Buyer Ticket",
+                    description: "Purchase something",
+                    value: "buyer",
+                    emoji: "🛒"
+                },
+                {
+                    label: "Support Ticket",
+                    description: "Get help",
+                    value: "support",
+                    emoji: "💬"
+                },
+                {
+                    label: "Free Access Ticket",
+                    description: "Request access",
+                    value: "free",
+                    emoji: "🎁"
+                }
+            ]);
+
+
+        const row = new ActionRowBuilder()
+            .addComponents(menu);
+
+
+        await interaction.reply({
+            embeds: [embed],
+            components: [row]
+        });
+    }
+};
