@@ -1,29 +1,61 @@
-const { REST, Routes } = require("discord.js");
+if (interaction.commandName === "ping") {
 
-const commands = [
-  {
-    name: "ping",
-    description: "Replies with Pong!"
-  }
-];
+    const { EmbedBuilder } = require("discord.js");
 
-const rest = new REST({ version: "10" })
-.setToken(process.env.TOKEN);
+    const ping = Date.now();
 
-const CLIENT_ID = "1531640039820230847";
+    await interaction.deferReply();
 
-(async () => {
-  try {
-    console.log("Registering commands...");
+    const latency = Date.now() - ping;
 
-    await rest.put(
-      Routes.applicationCommands(CLIENT_ID),
-      { body: commands }
-    );
+    const uptime = Math.floor(client.uptime / 1000);
 
-    console.log("✅ Commands registered!");
-  } catch (error) {
-    console.error(error);
-  }
-})(); 
-{
+    const days = Math.floor(uptime / 86400);
+    const hours = Math.floor(uptime / 3600) % 24;
+    const minutes = Math.floor(uptime / 60) % 60;
+    const seconds = uptime % 60;
+
+
+    const embed = new EmbedBuilder()
+
+    .setColor("#8B0000")
+
+    .setTitle("🔴⚫ NSC Bot Status")
+
+    .setDescription(
+`🟢 **Status:** Online
+
+🏓 **Bot Latency**
+\`${latency}ms\`
+
+🌐 **API Latency**
+\`${client.ws.ping}ms\`
+
+⏱️ **Uptime**
+\`${days}d ${hours}h ${minutes}m ${seconds}s\`
+
+━━━━━━━━━━━━━━━━
+
+🏠 **Servers**
+\`${client.guilds.cache.size}\`
+
+👥 **Users**
+\`${client.users.cache.size}\`
+
+━━━━━━━━━━━━━━━━
+
+⚫ NSC • No Second Chances`
+    )
+
+    .setFooter({
+        text: "System Monitoring"
+    })
+
+    .setTimestamp();
+
+
+    await interaction.editReply({
+        embeds: [embed]
+    });
+
+}
