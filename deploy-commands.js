@@ -27,6 +27,3 @@ const CLIENT_ID = "1531640039820230847";
   }
 })(); 
 {
-  name: "help",
-  description: "Shows bot help"
-}
