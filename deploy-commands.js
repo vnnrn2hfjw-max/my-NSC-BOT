@@ -1,61 +1,62 @@
-if (interaction.commandName === "ping") {
+const { REST, Routes } = require("discord.js");
 
-    const { EmbedBuilder } = require("discord.js");
+const commands = [
+  {
+    name: "derank",
+    description: "Remove a user's NSC Roblox rank"
+  },
+  {
+    name: "english",
+    description: "How to join NSC (English)"
+  },
+  {
+    name: "giveawaycreate",
+    description: "Create a giveaway"
+  },
+  {
+    name: "spanish",
+    description: "How to join NSC (Spanish)"
+  },
+  {
+    name: "price",
+    description: "View NSC prices and info"
+  },
+  {
+    name: "rank",
+    description: "Set a user's NSC Roblox rank"
+  },
+  {
+    name: "role",
+    description: "Give a Discord role"
+  },
+  {
+    name: "group",
+    description: "Get NSC Roblox group link"
+  },
+  {
+    name: "ping",
+    description: "Check bot performance"
+  }
+];
 
-    const ping = Date.now();
+const rest = new REST({ version: "10" })
+  .setToken(process.env.TOKEN);
 
-    await interaction.deferReply();
+const CLIENT_ID = "1531640039820230847";
 
-    const latency = Date.now() - ping;
+(async () => {
+  try {
+    console.log("Registering commands...");
 
-    const uptime = Math.floor(client.uptime / 1000);
+    await rest.put(
+      Routes.applicationCommands(CLIENT_ID),
+      {
+        body: commands
+      }
+    );
 
-    const days = Math.floor(uptime / 86400);
-    const hours = Math.floor(uptime / 3600) % 24;
-    const minutes = Math.floor(uptime / 60) % 60;
-    const seconds = uptime % 60;
-
-
-    const embed = new EmbedBuilder()
-
-    .setColor("#8B0000")
-
-    .setTitle("🔴⚫ NSC Bot Status")
-
-    .setDescription(
-`🟢 **Status:** Online
-
-🏓 **Bot Latency**
-\`${latency}ms\`
-
-🌐 **API Latency**
-\`${client.ws.ping}ms\`
-
-⏱️ **Uptime**
-\`${days}d ${hours}h ${minutes}m ${seconds}s\`
-
-━━━━━━━━━━━━━━━━
-
-🏠 **Servers**
-\`${client.guilds.cache.size}\`
-
-👥 **Users**
-\`${client.users.cache.size}\`
-
-━━━━━━━━━━━━━━━━
-
-⚫ NSC • No Second Chances`
-    )
-
-    .setFooter({
-        text: "System Monitoring"
-    })
-
-    .setTimestamp();
-
-
-    await interaction.editReply({
-        embeds: [embed]
-    });
-
-}
+    console.log("✅ Commands registered!");
+  } catch (error) {
+    console.error(error);
+  }
+})();
