@@ -10,7 +10,7 @@ const commands = [
 const rest = new REST({ version: "10" })
 .setToken(process.env.TOKEN);
 
-const CLIENT_ID = "PUT_YOUR_APPLICATION_ID_HERE";
+const CLIENT_ID = "1531640039820230847";
 
 (async () => {
   try {
