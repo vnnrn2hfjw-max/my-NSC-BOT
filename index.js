@@ -30,3 +30,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
 });
 
 client.login(process.env.TOKEN);
+if (interaction.commandName === "help") {
+  await interaction.reply("Commands: /ping /help");
+}
