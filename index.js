@@ -13,8 +13,19 @@ client.once(Events.ClientReady, () => {
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
-  if (interaction.commandName === "ping") {
-    await interaction.reply("🏓 Pong!");
+  try {
+    if (interaction.commandName === "ping") {
+      await interaction.reply("🏓 Pong!");
+    }
+  } catch (error) {
+    console.error(error);
+
+    if (!interaction.replied) {
+      await interaction.reply({
+        content: "❌ Something went wrong.",
+        ephemeral: true
+      });
+    }
   }
 });
 
