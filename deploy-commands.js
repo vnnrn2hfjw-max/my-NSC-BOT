@@ -25,4 +25,8 @@ const CLIENT_ID = "1531640039820230847";
   } catch (error) {
     console.error(error);
   }
-})();
+})(); 
+{
+  name: "help",
+  description: "Shows bot help"
+}
