@@ -1,92 +1,64 @@
-require("dotenv").config();
-
 const {
   Client,
   GatewayIntentBits,
-  EmbedBuilder
+  EmbedBuilder,
+  REST,
+  Routes,
+  Events
 } = require("discord.js");
 
-const { REST, Routes } = require("discord.js");
-
-
 const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds
-  ]
+  intents: [GatewayIntentBits.Guilds],
 });
 
-
-// Slash commands
 const commands = [
   {
     name: "ping",
-    description: "Check bot performance"
-  }
+    description: "Check bot performance",
+  },
 ];
 
-
-const rest = new REST({ version: "10" })
-.setToken(process.env.TOKEN);
-
+const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
 const CLIENT_ID = "1531640039820230847";
 
-
-// Register commands
+// Register slash commands
 (async () => {
   try {
-
     console.log("Registering commands...");
 
     await rest.put(
       Routes.applicationCommands(CLIENT_ID),
-      {
-        body: commands
-      }
+      { body: commands }
     );
 
     console.log("✅ Commands registered!");
-
   } catch (error) {
-
-    console.error(error);
-
+    console.error("Command registration error:", error);
   }
 })();
 
-
-// When bot starts
-client.once("ready", () => {
-
-  console.log(`✅ ${client.user.tag} is online!`);
-
+// Bot ready
+client.once(Events.ClientReady, () => {
+  console.log(`✅ Logged in as ${client.user.tag}`);
 });
 
-
-// Commands
-client.on("interactionCreate", async interaction => {
-
+// Slash commands
+client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
+  try {
+    if (interaction.commandName === "ping") {
+      const start = Date.now();
 
-  if (interaction.commandName === "ping") {
+      await interaction.deferReply();
 
+      const latency = Date.now() - start;
 
-    const start = Date.now();
-
-    await interaction.deferReply();
-
-
-    const latency = Date.now() - start;
-
-
-    const embed = new EmbedBuilder()
-
-    .setColor("#8B0000")
-
-    .setTitle("🔴⚫ NSC Bot Status")
-
-    .setDescription(
+      const embed = new EmbedBuilder()
+        .setColor("#8B0000")
+        .setTitle("🔴⚫ NSC Bot Status")
+        .setDescription(
 `🟢 **Status:** Online
 
 🏓 **Bot Latency**
@@ -98,19 +70,26 @@ client.on("interactionCreate", async interaction => {
 ━━━━━━━━━━━━━━
 
 ⚫ NSC • No Second Chances`
-    )
+        )
+        .setTimestamp();
 
-    .setTimestamp();
+      await interaction.editReply({
+        embeds: [embed],
+      });
+    }
+  } catch (error) {
+    console.error("Interaction error:", error);
 
-
-    await interaction.editReply({
-      embeds: [embed]
-    });
-
+    if (interaction.deferred || interaction.replied) {
+      await interaction.editReply("❌ An error occurred.");
+    } else {
+      await interaction.reply({
+        content: "❌ An error occurred.",
+        ephemeral: true,
+      });
+    }
   }
-
 });
-
 
 // Login
 client.login(process.env.TOKEN);
